@@ -12,13 +12,13 @@ class Player():
     """
     
     def __init__(self, name: str, health: int, attack_name: str ,attack_power: int, defense: int, inventory: dict):
-        """Initializes a new Player instance"""
+        """Initializes a new Player instance with protected attributes"""
         self.name = name
-        self.health = health
-        self.attack_name = attack_name.upper()
-        self.attack_power = attack_power 
-        self.defense = defense
-        self.inventory = inventory
+        self._health = health
+        self._attack_name = attack_name.upper()
+        self._attack_power = attack_power 
+        self._defense = defense
+        self._inventory = inventory
     
     
     # Player attacks an enemy
@@ -29,8 +29,8 @@ class Player():
         Args:
             enemy (object): The enemy player who is receiving the attack (attack_name)
         """
-        print(f"{self.name} used {self.attack_name} on {enemy.name}\n")
-        enemy.take_damage(self.attack_power)
+        print(f"{self.name} used {self._attack_name} on {enemy.name}\n")
+        enemy.take_damage(self._attack_power)
     
     
     # Health gets reduced when attacked
@@ -41,9 +41,9 @@ class Player():
         Args:
             amount (int): Integer amount of the value of the damage that is going to be done
         """
-        self.health -= amount
+        self._health -= amount
         print(f"{self.name} TOOK DAMAGE!")
-        print(f"{self.name}'s health is now: {self.health}\n")
+        print(f"{self.name}'s health is now: {self._health}\n")
         
     
     # Restore health 
@@ -54,9 +54,9 @@ class Player():
         Args:
             amount (int): _description_
         """
-        self.health += amount
+        self._health += amount
         print(f"{self.name} HEALED")
-        print(f"{self.name} health: {self.health} \n")
+        print(f"{self.name} health: {self._health} \n")
     
     def add_to_inventory(self, new_item: str) -> str:
         """
@@ -70,10 +70,10 @@ class Player():
         Returns:
             str: A message communicating that the item has been added to the player's inventory
         """
-        if new_item in self.inventory: # Check if the new item already exists within the player's inventory. If yes, increase it's quantity
-            self.inventory[new_item] += 1 
+        if new_item in self._inventory: # Check if the new item already exists within the player's inventory. If yes, increase it's quantity
+            self._inventory[new_item] += 1 
         else:
-            self.inventory[new_item] = 1 # If new item doesn't exist in inventory, Add the new item and default it's value to 1 
+            self._inventory[new_item] = 1 # If new item doesn't exist in inventory, Add the new item and default it's value to 1 
         
         print(f"{new_item} added to {self.name}'s Inventory.\n")
     
@@ -88,12 +88,12 @@ class Player():
         """
         print(f"{self.name}'s INVENTORY:") # Header of the inventory view
         
-        if len(self.inventory) == 0:
+        if len(self._inventory) == 0:
             print(f"(Empty Inventory)")
 
         else:
-            for all_items in self.inventory:
-                print(f"--> {all_items} x{self.inventory[all_items]}\n")
+            for all_items in self._inventory:
+                print(f"--> {all_items} x{self._inventory[all_items]}\n")
         
     
 # Using keyword argument during object creation for better readability
@@ -123,16 +123,18 @@ player2 = Player(
     inventory={} # Testing empty inventory output
 )
 
-player1.attacks(enemy1)
-enemy1.attacks(player1)
+if __name__ == "__main__":
 
-player1.heal(10)
-enemy1.heal(10)
+    player1.attacks(enemy1)
+    enemy1.attacks(player1)
 
-player1.take_damage(3)
+    player1.heal(10)
+    enemy1.heal(10)
 
-player1.show_inventory()
-enemy1.show_inventory()
-player2.show_inventory()
+    player1.take_damage(3)
+
+    player1.show_inventory()
+    enemy1.show_inventory()
+    player2.show_inventory()
 
     
