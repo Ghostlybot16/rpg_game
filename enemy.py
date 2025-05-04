@@ -1,6 +1,6 @@
 from combatant import Combatant
 
-class Enemy:
+class Enemy(Combatant):
     """
     A class to create an enemy.
     
@@ -27,7 +27,7 @@ class Enemy:
         and calls the take_damage method to lower the opponents max health.
 
         Args:
-            target (object): The object (Player) who is receiving the damage from the enemy 
+            target (Combatant): The combatant (Player) who is receiving the damage from the enemy
         """
         print(f"{self.name} attacks back with {self._attack_name} to {target.name}!\n")
         target.take_damage(self._attack_power)
@@ -53,17 +53,20 @@ class Enemy:
         print(f"{self.name}'s new health: {self._health}")
         print("------------------------------")
     
-    def drop_loot(self):
+    def drop_loot(self) -> None:
         """
-        Enemy drops loot once they are defeated by a player. 
+        Enemy drops loot once they are defeated by a player and Enemy's inventory is emptied once loot has been dropped.
 
         Returns:
-            dict: If enemy has been successfully defeated, the player receive the dropped items
+            dict: If enemy has been successfully defeated, the player receives the dropped items
         """
         if self._health <= 0:
             print(f"{self.name} DEFEATED!")
             print(f"Dropped Items: {self._inventory}\n")
-            return self._inventory
+
+            dropped_items = self._inventory.copy() # Copy the items to another variable
+            self._inventory = {} # Clear out enemy inventory after loot drop
+            return dropped_items
         else:
             print(f"{self.name} is still alive! No loot to drop.\n")
             return {}

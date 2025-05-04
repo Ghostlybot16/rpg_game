@@ -1,5 +1,6 @@
 import unittest
 from player import Player
+from enemy import Enemy
 
 class TestPlayer(unittest.TestCase):
     pass
@@ -37,7 +38,7 @@ class TestPlayer(unittest.TestCase):
         self.player.add_to_inventory("Sword")
         self.assertEqual(self.player._inventory["Sword"], 1) # Check if new item added with count 1 
 
-    
+    # Testing empty inventory
     def test_empty_inventory(self):
         empty_inventory_player = Player(
             name="EmptyPlayer",
@@ -54,6 +55,49 @@ class TestPlayer(unittest.TestCase):
             self.player.show_inventory()
         except Exception as e:
             self.fail(f"show_inventory() crashed with exception: {e}")
+
+    # Testing collecting loot from a defeated enemy
+    def test_collect_loot_adds_items_to_inventory(self):
+        enemy = Enemy(
+            name="Goblin",
+            health=10,
+            attack_name="Stab",
+            attack_power=5,
+            defense=2,
+            inventory={"Gold Coin": 2}
+        )
+        enemy.take_damage(11) # Defeat the enemy
+        self.player.collect_loot(enemy)
+
+        self.assertIn("Gold Coin", self.player._inventory)
+        self.assertEqual(self.player._inventory["Gold Coin"], 2)
+
+    # Testing enemies with no loot drop nothing
+    def test_collect_loot_from_alive_enemy_does_nothing(self):
+        enemy = Enemy(
+            name="Alive Goblin",
+            health=50,
+            attack_name="Stab",
+            attack_power=5,
+            defense=2,
+            inventory={"Gold Coin": 1}
+        )
+        self.player.collect_loot(enemy)
+        self.assertNotIn("Gold Coin", self.player._inventory) # Should not have added anything
+
+    # Testing to ensure loot is cleared from enemy after drop
+    def test_enemy_inventory_cleared_after_loot_drop(self):
+        enemy = Enemy(
+            name="Goblin",
+            health=10,
+            attack_name="Stab",
+            attack_power=5,
+            defense=2,
+            inventory={"Gold Coin": 1}
+        )
+        enemy.take_damage(15) # Defeat the enemy
+        self.player.collect_loot(enemy)
+        self.assertEqual(enemy._inventory, {}) # Inventory should be empty
     
 if __name__ == "__main__":
     unittest.main()
