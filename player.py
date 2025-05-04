@@ -1,13 +1,15 @@
-class Player():
+from combatant import Combatant
+
+class Player:
     """
     A class to create a player.
     
-    Attributes:
+    Args:
         name (str): The player's name
         health (int): The player's total health
         attack_name (str): The name of the attack the player uses
         attack_power (int): The power value of the player's attack
-        defese (int): The value of the player's defense 
+        defense (int): The value of the player's defense
         inventory (dict): The player's inventory 
     """
     
@@ -22,7 +24,7 @@ class Player():
     
     
     # Player attacks an enemy
-    def attacks(self, enemy: object):
+    def attacks(self, enemy: Combatant) -> None:
         """
         Outputs the attack scenario by mentioning the attack name and who the attack is being used against 
         
@@ -34,7 +36,7 @@ class Player():
     
     
     # Health gets reduced when attacked
-    def take_damage(self, amount: int) -> str:
+    def take_damage(self, amount: int) -> None:
         """
         Outputs a message to communicate that a player has taken damage & Outputs the updated DECREASED health
 
@@ -47,7 +49,7 @@ class Player():
         
     
     # Restore health 
-    def heal(self, amount: int) -> str:
+    def heal(self, amount: int) -> None:
         """
         Outputs a message to communicate that a player has healed by the provided amount & Outputs the updated INCREASED health
 
@@ -58,11 +60,11 @@ class Player():
         print(f"{self.name} HEALED")
         print(f"{self.name} health: {self._health} \n")
     
-    def add_to_inventory(self, new_item: str) -> str:
+    def add_to_inventory(self, new_item: str) -> None:
         """
         Checks if a new item already exists within the player's inventory. 
-        If yes, increase the item's max quanity. 
-        If no, add the new item and set it's value to 1.
+        If yes, increase the item's max quantity.
+        If no, add the new item and set its value to 1.
 
         Args:
             new_item (str): New item that the player comes across
@@ -70,14 +72,14 @@ class Player():
         Returns:
             str: A message communicating that the item has been added to the player's inventory
         """
-        if new_item in self._inventory: # Check if the new item already exists within the player's inventory. If yes, increase it's quantity
+        if new_item in self._inventory: # Check if the new item already exists within the player's inventory. If yes, increase its quantity
             self._inventory[new_item] += 1 
         else:
-            self._inventory[new_item] = 1 # If new item doesn't exist in inventory, Add the new item and default it's value to 1 
+            self._inventory[new_item] = 1 # If new item doesn't exist in inventory, Add the new item and default its value to 1
         
         print(f"{new_item} added to {self.name}'s Inventory.\n")
     
-    def show_inventory(self) -> dict:
+    def show_inventory(self) -> None:
         """
         Outputs the inventory items of the player. In the format "--> [item_name] x[item_quantity]"
         

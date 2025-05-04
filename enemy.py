@@ -1,8 +1,10 @@
-class Enemy():
+from combatant import Combatant
+
+class Enemy:
     """
     A class to create an enemy.
     
-    Attributes:
+    Args:
         name (str): The enemy's name
         health (int): The enemy's total health
         attack_name (str): The name of the enemy's attack 
@@ -19,7 +21,7 @@ class Enemy():
         self._inventory = inventory
     
     # Enemy attack back to player
-    def attacks(self, target: object) -> str:
+    def attacks(self, target: Combatant) -> None:
         """
         Outputs the attack scenario by mentioning the attack name, who the attack is being used against 
         and calls the take_damage method to lower the opponents max health.
@@ -32,7 +34,7 @@ class Enemy():
     
     
     # Players health gets reduced by enemy 
-    def take_damage(self, amount: int) -> str:
+    def take_damage(self, amount: int) -> None:
         """
         The method that is called to reduce the target's health by the given amount.
         This method also checks if the health has been lowered to a negative amount, if yes, then set it to 0
@@ -56,7 +58,7 @@ class Enemy():
         Enemy drops loot once they are defeated by a player. 
 
         Returns:
-            dict: If enemy has been successfully defeated, the player recieve the dropped items 
+            dict: If enemy has been successfully defeated, the player receive the dropped items
         """
         if self._health <= 0:
             print(f"{self.name} DEFEATED!")
