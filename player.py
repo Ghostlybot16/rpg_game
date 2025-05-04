@@ -1,6 +1,7 @@
 from combatant import Combatant
+from enemy import Enemy
 
-class Player:
+class Player(Combatant):
     """
     A class to create a player.
     
@@ -29,7 +30,7 @@ class Player:
         Outputs the attack scenario by mentioning the attack name and who the attack is being used against 
         
         Args:
-            enemy (object): The enemy player who is receiving the attack (attack_name)
+            enemy (Combatant): The enemy player who is receiving the attack (attack_name)
         """
         print(f"{self.name} used {self._attack_name} on {enemy.name}\n")
         enemy.take_damage(self._attack_power)
@@ -54,30 +55,30 @@ class Player:
         Outputs a message to communicate that a player has healed by the provided amount & Outputs the updated INCREASED health
 
         Args:
-            amount (int): _description_
+            amount (int): The amount of health that is going to be restored to the player's health
         """
         self._health += amount
         print(f"{self.name} HEALED")
         print(f"{self.name} health: {self._health} \n")
     
-    def add_to_inventory(self, new_item: str) -> None:
+    def add_to_inventory(self, new_item: str, quantity_of_item: int = 1) -> None:
         """
         Checks if a new item already exists within the player's inventory. 
         If yes, increase the item's max quantity.
         If no, add the new item and set its value to 1.
 
+        This method also gets triggered when player tries to add a dropped item (after enemy defeat) to their inventory.
+
         Args:
             new_item (str): New item that the player comes across
-        
-        Returns:
-            str: A message communicating that the item has been added to the player's inventory
+            quantity_of_item (int, optional): The number of times the item is added to the player's inventory after dropped from defeated enemy or picked up
         """
         if new_item in self._inventory: # Check if the new item already exists within the player's inventory. If yes, increase its quantity
-            self._inventory[new_item] += 1 
+            self._inventory[new_item] += quantity_of_item
         else:
-            self._inventory[new_item] = 1 # If new item doesn't exist in inventory, Add the new item and default its value to 1
-        
-        print(f"{new_item} added to {self.name}'s Inventory.\n")
+            self._inventory[new_item] = quantity_of_item # If new item doesn't exist in inventory, Add the new item and default its value to 1
+
+        print(f"{new_item} x{quantity_of_item} added to {self.name}'s inventory.\n")
     
     def show_inventory(self) -> None:
         """
@@ -97,7 +98,27 @@ class Player:
             for all_items in self._inventory:
                 print(f"--> {all_items} x{self._inventory[all_items]}\n")
         
-    
+
+    def collect_loot(self, enemy: Combatant) -> None:
+        """
+        Collects loot dropped from a defeated enemy and adds it to the player's inventory.
+
+        Args:
+            enemy (Combatant): The enemy which drops loot.
+        """
+        dropped_loot = enemy.drop_loot() # Enemy's dropped loot
+
+        if not dropped_loot:
+            print("No dropped loot to collect.")
+            return
+
+        print(f"{self.name} collected loot from {enemy.name}.\n") # Loot collected output message
+
+        for dropped_item, quantity in dropped_loot.items():
+            self.add_to_inventory(dropped_item, quantity)
+
+
+
 # Using keyword argument during object creation for better readability
 player1 = Player(
     name="Kramptj", 
