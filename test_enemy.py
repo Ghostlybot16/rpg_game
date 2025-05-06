@@ -8,6 +8,7 @@ class TestEnemy(unittest.TestCase):
         self.enemy = Enemy(
             name="TestGoblin",
             health=50,
+            max_health=50,
             attack_name="Slash",
             attack_power=10,
             defense=5,
@@ -16,6 +17,7 @@ class TestEnemy(unittest.TestCase):
         self.target = Enemy( # Dummy enemy as a target 
             name="DummyPlayer",
             health=50,
+            max_health=50,
             attack_name="Slap",
             attack_power=5,
             defense=3,
@@ -42,7 +44,19 @@ class TestEnemy(unittest.TestCase):
             self.enemy.drop_loot()
         except Exception as e:
             self.fail(f"drop_loot() crashed with exception: {e}")
-    
+
+    def test_attack_does_not_affect_defeated_target(self):
+        self.target.take_damage(100)
+        self.enemy.attacks(self.target)
+        self.assertEqual(self.target.health, 0)
+
+    def test_is_defeated_true_when_zero_health(self):
+        self.enemy.take_damage(50)
+        self.assertTrue(self.enemy.is_defeated())
+
+    def test_is_defeated_false_when_alive(self):
+        self.assertFalse(self.enemy.is_defeated())
+
     # Check to see if the correct inventory is returned to the player after enemy death
     def test_drop_loot_when_enemy_defeated(self):
         self.enemy.take_damage(100) # Enemy health drops to 0
@@ -51,11 +65,16 @@ class TestEnemy(unittest.TestCase):
         expected_loot = {"Gold Coin": 1}
         
         self.assertEqual(loot, expected_loot)
-    
+
+    # Test to check that no loot is dropped when enemy is still alive
     def test_drop_loot_when_enemy_alive(self):
         loot = self.enemy.drop_loot() # Enemy still alive 
         self.assertEqual(loot, {})
-        
+
+    def test_drop_loot_inventory_cleared_after_drop(self):
+        self.enemy.take_damage(100)
+        self.enemy.drop_loot()
+        self.assertEqual(self.enemy.inventory, {})
 
 if __name__ == "__main__":
     unittest.main()

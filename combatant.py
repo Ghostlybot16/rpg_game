@@ -11,23 +11,33 @@ class Combatant(Protocol):
     - A "take_damage()" method to receive damage from a combatant
 
     """
-    name: str
+    name: str # Name of the combatant
 
     def attacks(self, target: "Combatant") -> None:
         """
-        Method that represents attacking another combatant.
+        Method that executes an attack on to another combatant.
 
         Args:
             target (Combatant): The opponent (combatant) being attacked
 
         """
-        pass
+        ...
 
     def take_damage(self, damage: int) -> None:
         """
-        Method that applies damage to the combatant
+        Method that applies damage to the combatant. The combatant's health drops by the 'damage' amount
 
         Args:
-            damage (int): The amount of damage received
+            damage (int): The amount of damage received by the combatant from an opponent
         """
-        pass
+        ...
+
+    def is_defeated(self) -> bool:
+        """
+        Checks whether the combatant has been defeated (ex: health = 0 or below)
+
+        Returns:
+            bool: True if defeated, False otherwise
+
+        """
+        ...
