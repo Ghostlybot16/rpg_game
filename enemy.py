@@ -71,8 +71,7 @@ class Enemy(Combatant):
             self._health = 0
             
         print(f"--- {self.name} TOOK DAMAGE! ---")
-        print(f"{self.name}'s new health: {self._health}")
-        print("------------------------------")
+        print(f"{self.name}'s new health: {self._health}\n")
 
 
     # Predicate method (Method to check a condition, returns a bool value)
